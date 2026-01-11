@@ -1,0 +1,2166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mendelian Genetics - Interactive Lesson</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            min-height: 100vh;
+            color: #2e7d32;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
+            color: white;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        /* Navigation */
+        .nav-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-bottom: 20px;
+            background: white;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .nav-tab {
+            padding: 12px 20px;
+            border: none;
+            background: #e8f5e9;
+            color: #2e7d32;
+            cursor: pointer;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .nav-tab:hover {
+            background: #c8e6c9;
+        }
+
+        .nav-tab.active {
+            background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
+            color: white;
+        }
+
+        .nav-tab.completed {
+            position: relative;
+        }
+
+        .nav-tab.completed::after {
+            content: '✓';
+            margin-left: 5px;
+            color: #4caf50;
+        }
+
+        .nav-tab.active.completed::after {
+            color: white;
+        }
+
+        /* Sections */
+        .section {
+            display: none;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .section h2 {
+            color: #1b5e20;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #4caf50;
+        }
+
+        .section h3 {
+            color: #2e7d32;
+            margin: 20px 0 15px 0;
+        }
+
+        /* Corn Kernels */
+        .kernel-container {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .kernel-display {
+            text-align: center;
+        }
+
+        .kernel {
+            width: 60px;
+            height: 80px;
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            display: inline-block;
+            margin: 10px;
+            box-shadow: inset -5px -5px 15px rgba(0,0,0,0.3), 2px 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .kernel.purple {
+            background: linear-gradient(135deg, #7b1fa2 0%, #4a148c 50%, #6a1b9a 100%);
+        }
+
+        .kernel.yellow {
+            background: linear-gradient(135deg, #ffd54f 0%, #ffb300 50%, #ffc107 100%);
+        }
+
+        .kernel.smooth {
+            border: none;
+        }
+
+        .kernel.wrinkled {
+            border: 3px dashed rgba(0,0,0,0.3);
+            background-size: 10px 10px;
+        }
+
+        .kernel.purple.wrinkled {
+            background: repeating-linear-gradient(
+                45deg,
+                #7b1fa2,
+                #7b1fa2 5px,
+                #4a148c 5px,
+                #4a148c 10px
+            );
+        }
+
+        .kernel.yellow.wrinkled {
+            background: repeating-linear-gradient(
+                45deg,
+                #ffd54f,
+                #ffd54f 5px,
+                #ffb300 5px,
+                #ffb300 10px
+            );
+        }
+
+        .kernel-label {
+            font-weight: bold;
+            margin-top: 5px;
+            color: #333;
+        }
+
+        /* Vocabulary */
+        .vocab-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .vocab-card {
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #2e7d32;
+        }
+
+        .vocab-term {
+            font-weight: bold;
+            color: #1b5e20;
+            font-size: 1.1rem;
+        }
+
+        .vocab-def {
+            color: #333;
+            margin-top: 5px;
+        }
+
+        /* Punnett Square */
+        .punnett-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 30px 0;
+        }
+
+        .punnett-square {
+            display: grid;
+            gap: 2px;
+            background: #1b5e20;
+            padding: 2px;
+            border-radius: 8px;
+        }
+
+        .punnett-square.mono {
+            grid-template-columns: 80px repeat(2, 100px);
+            grid-template-rows: 80px repeat(2, 100px);
+        }
+
+        .punnett-square.di {
+            grid-template-columns: 100px repeat(4, 90px);
+            grid-template-rows: 100px repeat(4, 90px);
+        }
+
+        .punnett-cell {
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .punnett-cell.header {
+            background: #e8f5e9;
+            color: #1b5e20;
+            font-size: 1.3rem;
+        }
+
+        .punnett-cell.corner {
+            background: #2e7d32;
+        }
+
+        .punnett-cell input {
+            width: 80%;
+            height: 80%;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            text-align: center;
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+
+        .punnett-cell input:focus {
+            outline: none;
+            border-color: #2e7d32;
+        }
+
+        .punnett-cell input.correct {
+            background: #c8e6c9;
+            border-color: #4caf50;
+        }
+
+        .punnett-cell input.incorrect {
+            background: #ffcdd2;
+            border-color: #f44336;
+        }
+
+        .punnett-cell.filled {
+            background: #e3f2fd;
+        }
+
+        /* Parent Labels */
+        .cross-label {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #1b5e20;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .parent-labels {
+            display: flex;
+            justify-content: center;
+            gap: 50px;
+            margin-bottom: 20px;
+        }
+
+        .parent-label {
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            padding: 15px 25px;
+            border-radius: 10px;
+            font-weight: bold;
+            color: #1b5e20;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 5px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(46, 125, 50, 0.4);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #7b1fa2 0%, #4a148c 100%);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(123, 31, 162, 0.4);
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+            color: white;
+        }
+
+        /* Score Display */
+        .score-display {
+            background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+            padding: 15px 25px;
+            border-radius: 10px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #e65100;
+            display: inline-block;
+            margin: 10px 0;
+        }
+
+        /* Info Box */
+        .info-box {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #1976d2;
+            margin: 20px 0;
+        }
+
+        .info-box.success {
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            border-left-color: #4caf50;
+        }
+
+        .info-box.warning {
+            background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+            border-left-color: #ff9800;
+        }
+
+        /* Ratio Display */
+        .ratio-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .ratio-box {
+            background: white;
+            border: 2px solid #2e7d32;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            min-width: 150px;
+        }
+
+        .ratio-box .phenotype {
+            font-weight: bold;
+            color: #1b5e20;
+            margin-bottom: 10px;
+        }
+
+        .ratio-box .count {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .ratio-box .fraction {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        /* Tutorial Steps */
+        .tutorial-step {
+            display: none;
+            padding: 20px;
+            background: #f5f5f5;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .tutorial-step.active {
+            display: block;
+        }
+
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .step-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #ccc;
+        }
+
+        .step-dot.active {
+            background: #2e7d32;
+        }
+
+        .step-dot.completed {
+            background: #4caf50;
+        }
+
+        /* Probability Section */
+        .formula-box {
+            background: #1b5e20;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            font-size: 1.2rem;
+            text-align: center;
+        }
+
+        .formula-box .formula {
+            font-family: 'Courier New', monospace;
+            font-size: 1.4rem;
+            margin: 10px 0;
+        }
+
+        .example-box {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border-left: 4px solid #7b1fa2;
+        }
+
+        /* Quiz */
+        .quiz-question {
+            background: #f5f5f5;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .quiz-question h4 {
+            color: #1b5e20;
+            margin-bottom: 15px;
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .quiz-option {
+            padding: 15px;
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .quiz-option:hover {
+            border-color: #2e7d32;
+            background: #e8f5e9;
+        }
+
+        .quiz-option.selected {
+            border-color: #2e7d32;
+            background: #c8e6c9;
+        }
+
+        .quiz-option.correct {
+            border-color: #4caf50;
+            background: #c8e6c9;
+        }
+
+        .quiz-option.incorrect {
+            border-color: #f44336;
+            background: #ffcdd2;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            width: 100%;
+            background: #e0e0e0;
+            border-radius: 10px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 20px;
+            background: linear-gradient(90deg, #4caf50, #2e7d32);
+            border-radius: 10px;
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 0.8rem;
+        }
+
+        /* Feedback */
+        .feedback {
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            display: none;
+        }
+
+        .feedback.show {
+            display: block;
+        }
+
+        .feedback.correct {
+            background: #c8e6c9;
+            color: #1b5e20;
+            border: 2px solid #4caf50;
+        }
+
+        .feedback.incorrect {
+            background: #ffcdd2;
+            color: #c62828;
+            border: 2px solid #f44336;
+        }
+
+        /* Gamete Selection */
+        .gamete-selection {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin: 15px 0;
+        }
+
+        .gamete-btn {
+            padding: 10px 20px;
+            border: 2px solid #2e7d32;
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .gamete-btn:hover {
+            background: #e8f5e9;
+        }
+
+        .gamete-btn.selected {
+            background: #2e7d32;
+            color: white;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-tabs {
+                justify-content: center;
+            }
+
+            .nav-tab {
+                font-size: 0.85rem;
+                padding: 10px 15px;
+            }
+
+            .punnett-square.mono {
+                grid-template-columns: 60px repeat(2, 80px);
+                grid-template-rows: 60px repeat(2, 80px);
+            }
+
+            .punnett-square.di {
+                grid-template-columns: 70px repeat(4, 65px);
+                grid-template-rows: 70px repeat(4, 65px);
+            }
+
+            .punnett-cell {
+                font-size: 0.9rem;
+            }
+
+            header h1 {
+                font-size: 1.6rem;
+            }
+        }
+
+        /* Animation */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .pulse {
+            animation: pulse 0.5s ease;
+        }
+
+        /* Input for probability */
+        .prob-input {
+            width: 80px;
+            padding: 8px;
+            border: 2px solid #2e7d32;
+            border-radius: 5px;
+            text-align: center;
+            font-size: 1rem;
+            margin: 0 5px;
+        }
+
+        .prob-input:focus {
+            outline: none;
+            border-color: #1b5e20;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Mendelian Genetics</h1>
+            <p>Interactive Lesson - Native American Corn Model</p>
+        </header>
+
+        <!-- Navigation -->
+        <div class="nav-tabs">
+            <button class="nav-tab active" onclick="showSection('intro')">1. Introduction</button>
+            <button class="nav-tab" onclick="showSection('mono-tutorial')">2. Monohybrid Tutorial</button>
+            <button class="nav-tab" onclick="showSection('mono-practice')">3. Monohybrid Practice</button>
+            <button class="nav-tab" onclick="showSection('di-tutorial')">4. Dihybrid Tutorial</button>
+            <button class="nav-tab" onclick="showSection('di-practice')">5. Dihybrid Practice</button>
+            <button class="nav-tab" onclick="showSection('probability')">6. Probability Rules</button>
+            <button class="nav-tab" onclick="showSection('quiz')">7. Final Quiz</button>
+        </div>
+
+        <!-- Section 1: Introduction -->
+        <div id="intro" class="section active">
+            <h2>Introduction to Mendelian Genetics</h2>
+
+            <p>Welcome! In this lesson, you'll learn how to predict the genetic outcomes of crosses using <strong>Punnett squares</strong> and <strong>probability calculations</strong>. We'll use <strong>Native American corn</strong> as our model organism.</p>
+
+            <h3>Our Model Organism: Corn (Zea mays)</h3>
+            <p>We'll study two traits in corn kernels:</p>
+
+            <div class="kernel-container">
+                <div class="kernel-display">
+                    <div class="kernel purple smooth"></div>
+                    <div class="kernel-label">Purple Smooth</div>
+                    <div style="font-size: 0.9rem; color: #666;">Genotype: P_S_</div>
+                </div>
+                <div class="kernel-display">
+                    <div class="kernel purple wrinkled"></div>
+                    <div class="kernel-label">Purple Wrinkled</div>
+                    <div style="font-size: 0.9rem; color: #666;">Genotype: P_ss</div>
+                </div>
+                <div class="kernel-display">
+                    <div class="kernel yellow smooth"></div>
+                    <div class="kernel-label">Yellow Smooth</div>
+                    <div style="font-size: 0.9rem; color: #666;">Genotype: ppS_</div>
+                </div>
+                <div class="kernel-display">
+                    <div class="kernel yellow wrinkled"></div>
+                    <div class="kernel-label">Yellow Wrinkled</div>
+                    <div style="font-size: 0.9rem; color: #666;">Genotype: ppss</div>
+                </div>
+            </div>
+
+            <h3>Trait Summary</h3>
+            <div class="info-box">
+                <p><strong>Kernel Color:</strong> Purple (P) is <strong>dominant</strong> over Yellow (p)</p>
+                <p><strong>Seed Texture:</strong> Smooth (S) is <strong>dominant</strong> over Wrinkled (s)</p>
+            </div>
+
+            <h3>Key Vocabulary</h3>
+            <div class="vocab-grid">
+                <div class="vocab-card">
+                    <div class="vocab-term">Gene</div>
+                    <div class="vocab-def">A segment of DNA that codes for a specific trait</div>
+                </div>
+                <div class="vocab-card">
+                    <div class="vocab-term">Allele</div>
+                    <div class="vocab-def">Different versions of a gene (e.g., P and p are alleles for color)</div>
+                </div>
+                <div class="vocab-card">
+                    <div class="vocab-term">Genotype</div>
+                    <div class="vocab-def">The genetic makeup of an organism (e.g., Pp, PP, pp)</div>
+                </div>
+                <div class="vocab-card">
+                    <div class="vocab-term">Phenotype</div>
+                    <div class="vocab-def">The observable trait (e.g., purple or yellow kernel)</div>
+                </div>
+                <div class="vocab-card">
+                    <div class="vocab-term">Homozygous</div>
+                    <div class="vocab-def">Having two identical alleles (PP or pp)</div>
+                </div>
+                <div class="vocab-card">
+                    <div class="vocab-term">Heterozygous</div>
+                    <div class="vocab-def">Having two different alleles (Pp)</div>
+                </div>
+                <div class="vocab-card">
+                    <div class="vocab-term">Dominant</div>
+                    <div class="vocab-def">An allele that masks the expression of another allele (P)</div>
+                </div>
+                <div class="vocab-card">
+                    <div class="vocab-term">Recessive</div>
+                    <div class="vocab-def">An allele whose expression is masked by a dominant allele (p)</div>
+                </div>
+            </div>
+
+            <h3>Genotype to Phenotype</h3>
+            <div class="info-box success">
+                <p><strong>For Kernel Color:</strong></p>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li><strong>PP</strong> (homozygous dominant) → Purple</li>
+                    <li><strong>Pp</strong> (heterozygous) → Purple</li>
+                    <li><strong>pp</strong> (homozygous recessive) → Yellow</li>
+                </ul>
+                <p style="margin-top: 15px;"><strong>For Seed Texture:</strong></p>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li><strong>SS</strong> (homozygous dominant) → Smooth</li>
+                    <li><strong>Ss</strong> (heterozygous) → Smooth</li>
+                    <li><strong>ss</strong> (homozygous recessive) → Wrinkled</li>
+                </ul>
+            </div>
+
+            <div style="text-align: center; margin-top: 30px;">
+                <button class="btn btn-primary" onclick="showSection('mono-tutorial')">Continue to Monohybrid Tutorial →</button>
+            </div>
+        </div>
+
+        <!-- Section 2: Monohybrid Tutorial -->
+        <div id="mono-tutorial" class="section">
+            <h2>Monohybrid Cross Tutorial</h2>
+
+            <p>A <strong>monohybrid cross</strong> examines the inheritance of a <strong>single trait</strong>. Let's learn how to use a Punnett square to predict offspring genotypes and phenotypes.</p>
+
+            <div class="step-indicator" id="mono-steps">
+                <div class="step-dot active" data-step="1"></div>
+                <div class="step-dot" data-step="2"></div>
+                <div class="step-dot" data-step="3"></div>
+                <div class="step-dot" data-step="4"></div>
+                <div class="step-dot" data-step="5"></div>
+            </div>
+
+            <!-- Step 1 -->
+            <div class="tutorial-step active" id="mono-step-1">
+                <h3>Step 1: Identify the Parents</h3>
+                <p>Let's cross two heterozygous purple corn plants:</p>
+
+                <div class="cross-label">Pp × Pp</div>
+
+                <div class="parent-labels">
+                    <div class="parent-label">
+                        <div class="kernel purple smooth" style="width: 40px; height: 50px;"></div>
+                        <div>Parent 1: Pp (Purple)</div>
+                    </div>
+                    <div class="parent-label">
+                        <div class="kernel purple smooth" style="width: 40px; height: 50px;"></div>
+                        <div>Parent 2: Pp (Purple)</div>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <p>Both parents are <strong>heterozygous</strong> (Pp) - they carry one dominant allele (P) and one recessive allele (p).</p>
+                    <p>Both parents show the <strong>purple phenotype</strong> because the dominant P allele masks the recessive p allele.</p>
+                </div>
+
+                <button class="btn btn-primary" onclick="nextMonoStep(2)">Next Step →</button>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="tutorial-step" id="mono-step-2">
+                <h3>Step 2: Determine the Gametes</h3>
+                <p>Each parent can only pass <strong>one allele</strong> to their offspring. Let's identify the possible gametes:</p>
+
+                <div class="info-box">
+                    <p><strong>Parent 1 (Pp):</strong> Can produce gametes with either <strong>P</strong> or <strong>p</strong></p>
+                    <p><strong>Parent 2 (Pp):</strong> Can produce gametes with either <strong>P</strong> or <strong>p</strong></p>
+                </div>
+
+                <p>During meiosis, alleles separate (this is the <strong>Law of Segregation</strong>). Each gamete receives only one allele.</p>
+
+                <div style="text-align: center; margin: 20px 0;">
+                    <div style="display: inline-block; background: #e8f5e9; padding: 20px; border-radius: 10px;">
+                        <strong>Gametes from Pp:</strong><br><br>
+                        <span style="font-size: 1.5rem; background: #2e7d32; color: white; padding: 10px 20px; border-radius: 5px; margin: 5px;">P</span>
+                        <span style="font-size: 1.5rem; background: #7b1fa2; color: white; padding: 10px 20px; border-radius: 5px; margin: 5px;">p</span>
+                    </div>
+                </div>
+
+                <button class="btn btn-secondary" onclick="nextMonoStep(1)">← Previous</button>
+                <button class="btn btn-primary" onclick="nextMonoStep(3)">Next Step →</button>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="tutorial-step" id="mono-step-3">
+                <h3>Step 3: Set Up the Punnett Square</h3>
+                <p>Place one parent's gametes across the <strong>top</strong> and the other parent's gametes down the <strong>side</strong>:</p>
+
+                <div class="punnett-container">
+                    <div class="punnett-square mono">
+                        <div class="punnett-cell corner"></div>
+                        <div class="punnett-cell header">P</div>
+                        <div class="punnett-cell header">p</div>
+                        <div class="punnett-cell header">P</div>
+                        <div class="punnett-cell"></div>
+                        <div class="punnett-cell"></div>
+                        <div class="punnett-cell header">p</div>
+                        <div class="punnett-cell"></div>
+                        <div class="punnett-cell"></div>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <p>The top row shows gametes from one parent (P and p)</p>
+                    <p>The left column shows gametes from the other parent (P and p)</p>
+                    <p>The inner 4 cells will show all possible offspring genotypes</p>
+                </div>
+
+                <button class="btn btn-secondary" onclick="nextMonoStep(2)">← Previous</button>
+                <button class="btn btn-primary" onclick="nextMonoStep(4)">Next Step →</button>
+            </div>
+
+            <!-- Step 4 -->
+            <div class="tutorial-step" id="mono-step-4">
+                <h3>Step 4: Fill in the Punnett Square</h3>
+                <p>Combine the alleles from each row and column to fill in each cell:</p>
+
+                <div class="punnett-container">
+                    <div class="punnett-square mono">
+                        <div class="punnett-cell corner"></div>
+                        <div class="punnett-cell header">P</div>
+                        <div class="punnett-cell header">p</div>
+                        <div class="punnett-cell header">P</div>
+                        <div class="punnett-cell filled"><strong>PP</strong></div>
+                        <div class="punnett-cell filled"><strong>Pp</strong></div>
+                        <div class="punnett-cell header">p</div>
+                        <div class="punnett-cell filled"><strong>Pp</strong></div>
+                        <div class="punnett-cell filled"><strong>pp</strong></div>
+                    </div>
+                </div>
+
+                <div class="info-box success">
+                    <p><strong>How to fill in each cell:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>Top-left: P (from top) + P (from side) = <strong>PP</strong></li>
+                        <li>Top-right: p (from top) + P (from side) = <strong>Pp</strong></li>
+                        <li>Bottom-left: P (from top) + p (from side) = <strong>Pp</strong></li>
+                        <li>Bottom-right: p (from top) + p (from side) = <strong>pp</strong></li>
+                    </ul>
+                    <p style="margin-top: 10px;"><em>Convention: Write the dominant allele first (Pp, not pP)</em></p>
+                </div>
+
+                <button class="btn btn-secondary" onclick="nextMonoStep(3)">← Previous</button>
+                <button class="btn btn-primary" onclick="nextMonoStep(5)">Next Step →</button>
+            </div>
+
+            <!-- Step 5 -->
+            <div class="tutorial-step" id="mono-step-5">
+                <h3>Step 5: Analyze the Results</h3>
+
+                <h4>Genotypic Ratio</h4>
+                <div class="ratio-container">
+                    <div class="ratio-box">
+                        <div class="phenotype">PP</div>
+                        <div class="count">1</div>
+                        <div class="fraction">1/4 = 25%</div>
+                    </div>
+                    <div class="ratio-box">
+                        <div class="phenotype">Pp</div>
+                        <div class="count">2</div>
+                        <div class="fraction">2/4 = 50%</div>
+                    </div>
+                    <div class="ratio-box">
+                        <div class="phenotype">pp</div>
+                        <div class="count">1</div>
+                        <div class="fraction">1/4 = 25%</div>
+                    </div>
+                </div>
+                <p style="text-align: center;"><strong>Genotypic Ratio: 1 PP : 2 Pp : 1 pp</strong></p>
+
+                <h4 style="margin-top: 30px;">Phenotypic Ratio</h4>
+                <div class="ratio-container">
+                    <div class="ratio-box">
+                        <div class="phenotype">
+                            <div class="kernel purple smooth" style="width: 30px; height: 40px; margin: 0 auto;"></div>
+                            Purple
+                        </div>
+                        <div class="count">3</div>
+                        <div class="fraction">3/4 = 75%</div>
+                    </div>
+                    <div class="ratio-box">
+                        <div class="phenotype">
+                            <div class="kernel yellow smooth" style="width: 30px; height: 40px; margin: 0 auto;"></div>
+                            Yellow
+                        </div>
+                        <div class="count">1</div>
+                        <div class="fraction">1/4 = 25%</div>
+                    </div>
+                </div>
+                <p style="text-align: center;"><strong>Phenotypic Ratio: 3 Purple : 1 Yellow (3:1)</strong></p>
+
+                <div class="info-box warning">
+                    <p><strong>Key Insight:</strong> The 3:1 phenotypic ratio is characteristic of a monohybrid cross between two heterozygotes. This is the ratio Mendel observed in his pea plant experiments!</p>
+                </div>
+
+                <button class="btn btn-secondary" onclick="nextMonoStep(4)">← Previous</button>
+                <button class="btn btn-primary" onclick="showSection('mono-practice')">Continue to Practice →</button>
+            </div>
+        </div>
+
+        <!-- Section 3: Monohybrid Practice -->
+        <div id="mono-practice" class="section">
+            <h2>Monohybrid Cross Practice</h2>
+
+            <div class="score-display">Score: <span id="mono-score">0</span> / <span id="mono-total">0</span></div>
+
+            <div id="mono-problem-container">
+                <div class="cross-label" id="mono-cross-display">Loading...</div>
+
+                <p style="text-align: center; margin: 20px 0;">Fill in the Punnett square below:</p>
+
+                <div class="punnett-container">
+                    <div class="punnett-square mono" id="mono-punnett">
+                        <div class="punnett-cell corner"></div>
+                        <div class="punnett-cell header" id="mono-h1">-</div>
+                        <div class="punnett-cell header" id="mono-h2">-</div>
+                        <div class="punnett-cell header" id="mono-v1">-</div>
+                        <div class="punnett-cell"><input type="text" id="mono-c1" maxlength="2"></div>
+                        <div class="punnett-cell"><input type="text" id="mono-c2" maxlength="2"></div>
+                        <div class="punnett-cell header" id="mono-v2">-</div>
+                        <div class="punnett-cell"><input type="text" id="mono-c3" maxlength="2"></div>
+                        <div class="punnett-cell"><input type="text" id="mono-c4" maxlength="2"></div>
+                    </div>
+                </div>
+
+                <div style="text-align: center; margin: 20px 0;">
+                    <p><strong>What is the phenotypic ratio?</strong></p>
+                    <div style="margin: 15px 0;">
+                        <label>Purple : <input type="number" id="mono-purple-ratio" class="prob-input" min="0" max="4"></label>
+                        <label>Yellow : <input type="number" id="mono-yellow-ratio" class="prob-input" min="0" max="4"></label>
+                    </div>
+                </div>
+
+                <div id="mono-feedback" class="feedback"></div>
+
+                <div style="text-align: center; margin-top: 20px;">
+                    <button class="btn btn-primary" onclick="checkMonoPractice()">Check Answers</button>
+                    <button class="btn btn-secondary" onclick="generateMonoProblem()">New Problem</button>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 30px;">
+                <button class="btn btn-primary" onclick="showSection('di-tutorial')">Continue to Dihybrid Tutorial →</button>
+            </div>
+        </div>
+
+        <!-- Section 4: Dihybrid Tutorial -->
+        <div id="di-tutorial" class="section">
+            <h2>Dihybrid Cross Tutorial</h2>
+
+            <p>A <strong>dihybrid cross</strong> examines the inheritance of <strong>two traits</strong> simultaneously. This demonstrates Mendel's <strong>Law of Independent Assortment</strong>.</p>
+
+            <div class="step-indicator" id="di-steps">
+                <div class="step-dot active" data-step="1"></div>
+                <div class="step-dot" data-step="2"></div>
+                <div class="step-dot" data-step="3"></div>
+                <div class="step-dot" data-step="4"></div>
+                <div class="step-dot" data-step="5"></div>
+            </div>
+
+            <!-- Step 1 -->
+            <div class="tutorial-step active" id="di-step-1">
+                <h3>Step 1: Identify the Parents</h3>
+                <p>Let's cross two corn plants that are heterozygous for <strong>both</strong> traits:</p>
+
+                <div class="cross-label">PpSs × PpSs</div>
+
+                <div class="parent-labels">
+                    <div class="parent-label">
+                        <div class="kernel purple smooth" style="width: 40px; height: 50px;"></div>
+                        <div>Parent 1: PpSs</div>
+                        <div style="font-size: 0.9rem;">(Purple, Smooth)</div>
+                    </div>
+                    <div class="parent-label">
+                        <div class="kernel purple smooth" style="width: 40px; height: 50px;"></div>
+                        <div>Parent 2: PpSs</div>
+                        <div style="font-size: 0.9rem;">(Purple, Smooth)</div>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <p>Both parents are <strong>double heterozygotes</strong>:</p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>Pp = heterozygous for color (Purple phenotype)</li>
+                        <li>Ss = heterozygous for texture (Smooth phenotype)</li>
+                    </ul>
+                </div>
+
+                <button class="btn btn-primary" onclick="nextDiStep(2)">Next Step →</button>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="tutorial-step" id="di-step-2">
+                <h3>Step 2: Determine the Gametes (FOIL Method)</h3>
+                <p>With two traits, each parent can produce <strong>4 different gamete types</strong>. Use the FOIL method:</p>
+
+                <div class="info-box">
+                    <p><strong>FOIL for PpSs:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>F</strong>irst: P with S = <strong>PS</strong></li>
+                        <li><strong>O</strong>uter: P with s = <strong>Ps</strong></li>
+                        <li><strong>I</strong>nner: p with S = <strong>pS</strong></li>
+                        <li><strong>L</strong>ast: p with s = <strong>ps</strong></li>
+                    </ul>
+                </div>
+
+                <div style="text-align: center; margin: 20px 0;">
+                    <div style="display: inline-block; background: #e8f5e9; padding: 20px; border-radius: 10px;">
+                        <strong>4 Possible Gametes from PpSs:</strong><br><br>
+                        <span style="font-size: 1.3rem; background: #2e7d32; color: white; padding: 8px 15px; border-radius: 5px; margin: 5px; display: inline-block;">PS</span>
+                        <span style="font-size: 1.3rem; background: #2e7d32; color: white; padding: 8px 15px; border-radius: 5px; margin: 5px; display: inline-block;">Ps</span>
+                        <span style="font-size: 1.3rem; background: #2e7d32; color: white; padding: 8px 15px; border-radius: 5px; margin: 5px; display: inline-block;">pS</span>
+                        <span style="font-size: 1.3rem; background: #2e7d32; color: white; padding: 8px 15px; border-radius: 5px; margin: 5px; display: inline-block;">ps</span>
+                    </div>
+                </div>
+
+                <p>This demonstrates the <strong>Law of Independent Assortment</strong>: alleles for different traits separate independently during gamete formation.</p>
+
+                <button class="btn btn-secondary" onclick="nextDiStep(1)">← Previous</button>
+                <button class="btn btn-primary" onclick="nextDiStep(3)">Next Step →</button>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="tutorial-step" id="di-step-3">
+                <h3>Step 3: Set Up the 4×4 Punnett Square</h3>
+                <p>Place the 4 gamete types from each parent on the edges:</p>
+
+                <div class="punnett-container">
+                    <div class="punnett-square di">
+                        <div class="punnett-cell corner"></div>
+                        <div class="punnett-cell header">PS</div>
+                        <div class="punnett-cell header">Ps</div>
+                        <div class="punnett-cell header">pS</div>
+                        <div class="punnett-cell header">ps</div>
+                        <div class="punnett-cell header">PS</div>
+                        <div class="punnett-cell"></div>
+                        <div class="punnett-cell"></div>
+                        <div class="punnett-cell"></div>
+                        <div class="punnett-cell"></div>
+                        <div class="punnett-cell header">Ps</div>
+                        <div class="punnett-cell"></div>
+                        <div class="punnett-cell"></div>
+                        <div class="punnett-cell"></div>
+                        <div class="punnett-cell"></div>
+                        <div class="punnett-cell header">pS</div>
+                        <div class="punnett-cell"></div>
+                        <div class="punnett-cell"></div>
+                        <div class="punnett-cell"></div>
+                        <div class="punnett-cell"></div>
+                        <div class="punnett-cell header">ps</div>
+                        <div class="punnett-cell"></div>
+                        <div class="punnett-cell"></div>
+                        <div class="punnett-cell"></div>
+                        <div class="punnett-cell"></div>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <p>With 4 gamete types from each parent, we get a 4×4 grid with <strong>16 possible offspring combinations</strong>.</p>
+                </div>
+
+                <button class="btn btn-secondary" onclick="nextDiStep(2)">← Previous</button>
+                <button class="btn btn-primary" onclick="nextDiStep(4)">Next Step →</button>
+            </div>
+
+            <!-- Step 4 -->
+            <div class="tutorial-step" id="di-step-4">
+                <h3>Step 4: Fill in the Punnett Square</h3>
+                <p>Combine alleles from the row and column headers. Remember to write dominant alleles first:</p>
+
+                <div class="punnett-container">
+                    <div class="punnett-square di">
+                        <div class="punnett-cell corner"></div>
+                        <div class="punnett-cell header">PS</div>
+                        <div class="punnett-cell header">Ps</div>
+                        <div class="punnett-cell header">pS</div>
+                        <div class="punnett-cell header">ps</div>
+                        <div class="punnett-cell header">PS</div>
+                        <div class="punnett-cell filled" style="font-size: 0.9rem;"><strong>PPSS</strong></div>
+                        <div class="punnett-cell filled" style="font-size: 0.9rem;"><strong>PPSs</strong></div>
+                        <div class="punnett-cell filled" style="font-size: 0.9rem;"><strong>PpSS</strong></div>
+                        <div class="punnett-cell filled" style="font-size: 0.9rem;"><strong>PpSs</strong></div>
+                        <div class="punnett-cell header">Ps</div>
+                        <div class="punnett-cell filled" style="font-size: 0.9rem;"><strong>PPSs</strong></div>
+                        <div class="punnett-cell filled" style="font-size: 0.9rem;"><strong>PPss</strong></div>
+                        <div class="punnett-cell filled" style="font-size: 0.9rem;"><strong>PpSs</strong></div>
+                        <div class="punnett-cell filled" style="font-size: 0.9rem;"><strong>Ppss</strong></div>
+                        <div class="punnett-cell header">pS</div>
+                        <div class="punnett-cell filled" style="font-size: 0.9rem;"><strong>PpSS</strong></div>
+                        <div class="punnett-cell filled" style="font-size: 0.9rem;"><strong>PpSs</strong></div>
+                        <div class="punnett-cell filled" style="font-size: 0.9rem;"><strong>ppSS</strong></div>
+                        <div class="punnett-cell filled" style="font-size: 0.9rem;"><strong>ppSs</strong></div>
+                        <div class="punnett-cell header">ps</div>
+                        <div class="punnett-cell filled" style="font-size: 0.9rem;"><strong>PpSs</strong></div>
+                        <div class="punnett-cell filled" style="font-size: 0.9rem;"><strong>Ppss</strong></div>
+                        <div class="punnett-cell filled" style="font-size: 0.9rem;"><strong>ppSs</strong></div>
+                        <div class="punnett-cell filled" style="font-size: 0.9rem;"><strong>ppss</strong></div>
+                    </div>
+                </div>
+
+                <div class="info-box success">
+                    <p><strong>Tip:</strong> When combining gametes, keep the alleles for each trait together:</p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>PS + Ps = P+P (for color) and S+s (for texture) = PPSs</li>
+                        <li>Always write dominant allele first: Pp (not pP), Ss (not sS)</li>
+                    </ul>
+                </div>
+
+                <button class="btn btn-secondary" onclick="nextDiStep(3)">← Previous</button>
+                <button class="btn btn-primary" onclick="nextDiStep(5)">Next Step →</button>
+            </div>
+
+            <!-- Step 5 -->
+            <div class="tutorial-step" id="di-step-5">
+                <h3>Step 5: Analyze the Results</h3>
+
+                <h4>Phenotypic Ratio (9:3:3:1)</h4>
+                <div class="ratio-container">
+                    <div class="ratio-box">
+                        <div class="phenotype">
+                            <div class="kernel purple smooth" style="width: 30px; height: 40px; margin: 0 auto;"></div>
+                            Purple Smooth
+                        </div>
+                        <div class="count">9</div>
+                        <div class="fraction">9/16 = 56.25%</div>
+                    </div>
+                    <div class="ratio-box">
+                        <div class="phenotype">
+                            <div class="kernel purple wrinkled" style="width: 30px; height: 40px; margin: 0 auto;"></div>
+                            Purple Wrinkled
+                        </div>
+                        <div class="count">3</div>
+                        <div class="fraction">3/16 = 18.75%</div>
+                    </div>
+                    <div class="ratio-box">
+                        <div class="phenotype">
+                            <div class="kernel yellow smooth" style="width: 30px; height: 40px; margin: 0 auto;"></div>
+                            Yellow Smooth
+                        </div>
+                        <div class="count">3</div>
+                        <div class="fraction">3/16 = 18.75%</div>
+                    </div>
+                    <div class="ratio-box">
+                        <div class="phenotype">
+                            <div class="kernel yellow wrinkled" style="width: 30px; height: 40px; margin: 0 auto;"></div>
+                            Yellow Wrinkled
+                        </div>
+                        <div class="count">1</div>
+                        <div class="fraction">1/16 = 6.25%</div>
+                    </div>
+                </div>
+                <p style="text-align: center;"><strong>Phenotypic Ratio: 9:3:3:1</strong></p>
+
+                <div class="info-box warning">
+                    <p><strong>Key Insight:</strong> The 9:3:3:1 ratio is characteristic of a dihybrid cross between two double heterozygotes. Notice that:</p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>9 + 3 = 12 show dominant color (Purple) → 12/16 = 3/4</li>
+                        <li>3 + 1 = 4 show recessive color (Yellow) → 4/16 = 1/4</li>
+                        <li>This maintains the 3:1 ratio for EACH trait independently!</li>
+                    </ul>
+                </div>
+
+                <h4 style="margin-top: 20px;">Genotype Breakdown</h4>
+                <div class="info-box">
+                    <p><strong>9 Purple Smooth:</strong> P_S_ (1 PPSS, 2 PPSs, 2 PpSS, 4 PpSs)</p>
+                    <p><strong>3 Purple Wrinkled:</strong> P_ss (1 PPss, 2 Ppss)</p>
+                    <p><strong>3 Yellow Smooth:</strong> ppS_ (1 ppSS, 2 ppSs)</p>
+                    <p><strong>1 Yellow Wrinkled:</strong> ppss (1 ppss)</p>
+                </div>
+
+                <button class="btn btn-secondary" onclick="nextDiStep(4)">← Previous</button>
+                <button class="btn btn-primary" onclick="showSection('di-practice')">Continue to Practice →</button>
+            </div>
+        </div>
+
+        <!-- Section 5: Dihybrid Practice -->
+        <div id="di-practice" class="section">
+            <h2>Dihybrid Cross Practice</h2>
+
+            <div class="score-display">Score: <span id="di-score">0</span> / <span id="di-total">0</span></div>
+
+            <div id="di-problem-container">
+                <div class="cross-label" id="di-cross-display">Loading...</div>
+
+                <p style="text-align: center; margin: 20px 0;">Fill in the Punnett square below:</p>
+
+                <div class="punnett-container">
+                    <div class="punnett-square di" id="di-punnett">
+                        <div class="punnett-cell corner"></div>
+                        <div class="punnett-cell header" id="di-h1">-</div>
+                        <div class="punnett-cell header" id="di-h2">-</div>
+                        <div class="punnett-cell header" id="di-h3">-</div>
+                        <div class="punnett-cell header" id="di-h4">-</div>
+                        <div class="punnett-cell header" id="di-v1">-</div>
+                        <div class="punnett-cell"><input type="text" id="di-c1" maxlength="4"></div>
+                        <div class="punnett-cell"><input type="text" id="di-c2" maxlength="4"></div>
+                        <div class="punnett-cell"><input type="text" id="di-c3" maxlength="4"></div>
+                        <div class="punnett-cell"><input type="text" id="di-c4" maxlength="4"></div>
+                        <div class="punnett-cell header" id="di-v2">-</div>
+                        <div class="punnett-cell"><input type="text" id="di-c5" maxlength="4"></div>
+                        <div class="punnett-cell"><input type="text" id="di-c6" maxlength="4"></div>
+                        <div class="punnett-cell"><input type="text" id="di-c7" maxlength="4"></div>
+                        <div class="punnett-cell"><input type="text" id="di-c8" maxlength="4"></div>
+                        <div class="punnett-cell header" id="di-v3">-</div>
+                        <div class="punnett-cell"><input type="text" id="di-c9" maxlength="4"></div>
+                        <div class="punnett-cell"><input type="text" id="di-c10" maxlength="4"></div>
+                        <div class="punnett-cell"><input type="text" id="di-c11" maxlength="4"></div>
+                        <div class="punnett-cell"><input type="text" id="di-c12" maxlength="4"></div>
+                        <div class="punnett-cell header" id="di-v4">-</div>
+                        <div class="punnett-cell"><input type="text" id="di-c13" maxlength="4"></div>
+                        <div class="punnett-cell"><input type="text" id="di-c14" maxlength="4"></div>
+                        <div class="punnett-cell"><input type="text" id="di-c15" maxlength="4"></div>
+                        <div class="punnett-cell"><input type="text" id="di-c16" maxlength="4"></div>
+                    </div>
+                </div>
+
+                <div style="text-align: center; margin: 20px 0;">
+                    <p><strong>What is the phenotypic ratio?</strong></p>
+                    <div style="margin: 15px 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 15px;">
+                        <label>Purple Smooth: <input type="number" id="di-ps-ratio" class="prob-input" min="0" max="16"></label>
+                        <label>Purple Wrinkled: <input type="number" id="di-pw-ratio" class="prob-input" min="0" max="16"></label>
+                        <label>Yellow Smooth: <input type="number" id="di-ys-ratio" class="prob-input" min="0" max="16"></label>
+                        <label>Yellow Wrinkled: <input type="number" id="di-yw-ratio" class="prob-input" min="0" max="16"></label>
+                    </div>
+                </div>
+
+                <div id="di-feedback" class="feedback"></div>
+
+                <div style="text-align: center; margin-top: 20px;">
+                    <button class="btn btn-primary" onclick="checkDiPractice()">Check Answers</button>
+                    <button class="btn btn-secondary" onclick="generateDiProblem()">New Problem</button>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 30px;">
+                <button class="btn btn-primary" onclick="showSection('probability')">Continue to Probability Rules →</button>
+            </div>
+        </div>
+
+        <!-- Section 6: Probability Rules -->
+        <div id="probability" class="section">
+            <h2>Probability Rules in Genetics</h2>
+
+            <p>You can predict genetic outcomes <strong>without</strong> drawing Punnett squares by using probability rules. This is especially useful for complex crosses!</p>
+
+            <h3>The Product Rule (AND Rule)</h3>
+            <div class="formula-box">
+                <p>When you want the probability of <strong>two independent events occurring together</strong>:</p>
+                <div class="formula">P(A AND B) = P(A) × P(B)</div>
+            </div>
+
+            <div class="example-box">
+                <h4>Example: What is the probability of getting a PpSs offspring from PpSs × PpSs?</h4>
+                <p style="margin-top: 10px;"><strong>Step 1:</strong> Find probability of Pp from Pp × Pp</p>
+                <p>From the monohybrid cross Pp × Pp, we get: 1 PP : 2 Pp : 1 pp</p>
+                <p>P(Pp) = 2/4 = <strong>1/2</strong></p>
+
+                <p style="margin-top: 10px;"><strong>Step 2:</strong> Find probability of Ss from Ss × Ss</p>
+                <p>From the monohybrid cross Ss × Ss, we get: 1 SS : 2 Ss : 1 ss</p>
+                <p>P(Ss) = 2/4 = <strong>1/2</strong></p>
+
+                <p style="margin-top: 10px;"><strong>Step 3:</strong> Apply the Product Rule</p>
+                <p>P(PpSs) = P(Pp) × P(Ss) = 1/2 × 1/2 = <strong>1/4 = 25%</strong></p>
+            </div>
+
+            <h3 style="margin-top: 30px;">The Sum Rule (OR Rule)</h3>
+            <div class="formula-box">
+                <p>When you want the probability of <strong>either one event OR another</strong> (mutually exclusive):</p>
+                <div class="formula">P(A OR B) = P(A) + P(B)</div>
+            </div>
+
+            <div class="example-box">
+                <h4>Example: What is the probability of getting a Purple offspring from Pp × Pp?</h4>
+                <p style="margin-top: 10px;">Purple can be either PP OR Pp</p>
+                <p>P(PP) = 1/4</p>
+                <p>P(Pp) = 2/4 = 1/2</p>
+                <p style="margin-top: 10px;"><strong>Apply the Sum Rule:</strong></p>
+                <p>P(Purple) = P(PP) + P(Pp) = 1/4 + 2/4 = <strong>3/4 = 75%</strong></p>
+            </div>
+
+            <h3 style="margin-top: 30px;">Combining Both Rules</h3>
+            <div class="example-box">
+                <h4>Example: From PpSs × PpSs, what is the probability of Purple Smooth offspring?</h4>
+                <p style="margin-top: 10px;"><strong>Step 1:</strong> Find P(Purple) - need PP OR Pp</p>
+                <p>P(Purple) = P(PP) + P(Pp) = 1/4 + 2/4 = <strong>3/4</strong></p>
+
+                <p style="margin-top: 10px;"><strong>Step 2:</strong> Find P(Smooth) - need SS OR Ss</p>
+                <p>P(Smooth) = P(SS) + P(Ss) = 1/4 + 2/4 = <strong>3/4</strong></p>
+
+                <p style="margin-top: 10px;"><strong>Step 3:</strong> Apply Product Rule (need Purple AND Smooth)</p>
+                <p>P(Purple Smooth) = 3/4 × 3/4 = <strong>9/16 = 56.25%</strong></p>
+
+                <p style="margin-top: 15px; color: #2e7d32;"><strong>This matches our Punnett square result!</strong></p>
+            </div>
+
+            <h3 style="margin-top: 30px;">Quick Reference - Common Probabilities</h3>
+            <div class="info-box success">
+                <p><strong>From a heterozygous × heterozygous cross (Aa × Aa):</strong></p>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li>P(AA) = 1/4</li>
+                    <li>P(Aa) = 1/2</li>
+                    <li>P(aa) = 1/4</li>
+                    <li>P(Dominant phenotype) = 3/4</li>
+                    <li>P(Recessive phenotype) = 1/4</li>
+                </ul>
+            </div>
+
+            <h3 style="margin-top: 30px;">Practice Problems</h3>
+            <div id="prob-practice">
+                <div class="quiz-question">
+                    <h4 id="prob-question">Loading...</h4>
+                    <div style="margin: 20px 0;">
+                        <label>Your answer (as a fraction, e.g., 1/4 or 3/16): </label>
+                        <input type="text" id="prob-answer" class="prob-input" style="width: 100px;">
+                    </div>
+                    <div id="prob-feedback" class="feedback"></div>
+                    <button class="btn btn-primary" onclick="checkProbPractice()">Check Answer</button>
+                    <button class="btn btn-secondary" onclick="generateProbProblem()">New Problem</button>
+                </div>
+            </div>
+
+            <div class="score-display" style="margin-top: 20px;">Probability Score: <span id="prob-score">0</span> / <span id="prob-total">0</span></div>
+
+            <div style="text-align: center; margin-top: 30px;">
+                <button class="btn btn-primary" onclick="showSection('quiz')">Continue to Final Quiz →</button>
+            </div>
+        </div>
+
+        <!-- Section 7: Final Quiz -->
+        <div id="quiz" class="section">
+            <h2>Final Quiz</h2>
+
+            <div class="progress-container">
+                <div class="progress-bar" id="quiz-progress" style="width: 0%;">0%</div>
+            </div>
+
+            <div class="score-display">Quiz Score: <span id="quiz-score">0</span> / <span id="quiz-total-score">10</span></div>
+
+            <div id="quiz-container">
+                <!-- Quiz questions will be loaded here -->
+            </div>
+
+            <div id="quiz-results" style="display: none;">
+                <h3>Quiz Complete!</h3>
+                <div id="final-score" style="font-size: 2rem; text-align: center; margin: 30px 0;"></div>
+                <div id="quiz-summary"></div>
+                <button class="btn btn-primary" onclick="restartQuiz()">Retake Quiz</button>
+                <button class="btn btn-secondary" onclick="showSection('intro')">Review Lessons</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ==================== GLOBAL STATE ====================
+        let monoScore = 0;
+        let monoTotal = 0;
+        let diScore = 0;
+        let diTotal = 0;
+        let probScore = 0;
+        let probTotal = 0;
+        let quizScore = 0;
+        let currentQuizQuestion = 0;
+
+        let currentMonoCross = {};
+        let currentDiCross = {};
+        let currentProbProblem = {};
+
+        const completedSections = new Set();
+
+        // ==================== NAVIGATION ====================
+        function showSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+
+            // Show selected section
+            document.getElementById(sectionId).classList.add('active');
+
+            // Update nav tabs
+            const tabs = document.querySelectorAll('.nav-tab');
+            const sectionIndex = ['intro', 'mono-tutorial', 'mono-practice', 'di-tutorial', 'di-practice', 'probability', 'quiz'].indexOf(sectionId);
+            if (sectionIndex >= 0) {
+                tabs[sectionIndex].classList.add('active');
+            }
+
+            // Initialize section-specific content
+            if (sectionId === 'mono-practice' && !currentMonoCross.parent1) {
+                generateMonoProblem();
+            } else if (sectionId === 'di-practice' && !currentDiCross.parent1) {
+                generateDiProblem();
+            } else if (sectionId === 'probability' && !currentProbProblem.question) {
+                generateProbProblem();
+            } else if (sectionId === 'quiz' && currentQuizQuestion === 0) {
+                startQuiz();
+            }
+        }
+
+        function markSectionComplete(sectionId) {
+            completedSections.add(sectionId);
+            const tabs = document.querySelectorAll('.nav-tab');
+            const sectionIndex = ['intro', 'mono-tutorial', 'mono-practice', 'di-tutorial', 'di-practice', 'probability', 'quiz'].indexOf(sectionId);
+            if (sectionIndex >= 0) {
+                tabs[sectionIndex].classList.add('completed');
+            }
+        }
+
+        // ==================== MONOHYBRID TUTORIAL ====================
+        function nextMonoStep(step) {
+            // Hide all steps
+            document.querySelectorAll('#mono-tutorial .tutorial-step').forEach(s => s.classList.remove('active'));
+            // Show selected step
+            document.getElementById(`mono-step-${step}`).classList.add('active');
+
+            // Update step indicators
+            const dots = document.querySelectorAll('#mono-steps .step-dot');
+            dots.forEach((dot, index) => {
+                dot.classList.remove('active', 'completed');
+                if (index + 1 < step) dot.classList.add('completed');
+                if (index + 1 === step) dot.classList.add('active');
+            });
+
+            if (step === 5) {
+                markSectionComplete('mono-tutorial');
+            }
+        }
+
+        // ==================== DIHYBRID TUTORIAL ====================
+        function nextDiStep(step) {
+            document.querySelectorAll('#di-tutorial .tutorial-step').forEach(s => s.classList.remove('active'));
+            document.getElementById(`di-step-${step}`).classList.add('active');
+
+            const dots = document.querySelectorAll('#di-steps .step-dot');
+            dots.forEach((dot, index) => {
+                dot.classList.remove('active', 'completed');
+                if (index + 1 < step) dot.classList.add('completed');
+                if (index + 1 === step) dot.classList.add('active');
+            });
+
+            if (step === 5) {
+                markSectionComplete('di-tutorial');
+            }
+        }
+
+        // ==================== MONOHYBRID PRACTICE ====================
+        const monoGenotypes = ['PP', 'Pp', 'pp'];
+
+        function generateMonoProblem() {
+            // Random cross
+            const p1 = monoGenotypes[Math.floor(Math.random() * 3)];
+            const p2 = monoGenotypes[Math.floor(Math.random() * 3)];
+
+            currentMonoCross = {
+                parent1: p1,
+                parent2: p2,
+                gametes1: getMonoGametes(p1),
+                gametes2: getMonoGametes(p2)
+            };
+
+            // Calculate expected results
+            currentMonoCross.expected = calculateMonoResults(currentMonoCross.gametes1, currentMonoCross.gametes2);
+
+            // Update display
+            document.getElementById('mono-cross-display').textContent = `${p1} × ${p2}`;
+            document.getElementById('mono-h1').textContent = currentMonoCross.gametes1[0];
+            document.getElementById('mono-h2').textContent = currentMonoCross.gametes1[1] || currentMonoCross.gametes1[0];
+            document.getElementById('mono-v1').textContent = currentMonoCross.gametes2[0];
+            document.getElementById('mono-v2').textContent = currentMonoCross.gametes2[1] || currentMonoCross.gametes2[0];
+
+            // Clear inputs
+            for (let i = 1; i <= 4; i++) {
+                const input = document.getElementById(`mono-c${i}`);
+                input.value = '';
+                input.className = '';
+            }
+            document.getElementById('mono-purple-ratio').value = '';
+            document.getElementById('mono-yellow-ratio').value = '';
+            document.getElementById('mono-feedback').classList.remove('show');
+        }
+
+        function getMonoGametes(genotype) {
+            if (genotype === 'PP') return ['P', 'P'];
+            if (genotype === 'pp') return ['p', 'p'];
+            return ['P', 'p'];
+        }
+
+        function calculateMonoResults(g1, g2) {
+            const results = [];
+            for (let i = 0; i < 2; i++) {
+                for (let j = 0; j < 2; j++) {
+                    results.push(normalizeGenotype(g2[i] + g1[j]));
+                }
+            }
+
+            // Count phenotypes
+            let purple = 0, yellow = 0;
+            results.forEach(g => {
+                if (g.includes('P')) purple++;
+                else yellow++;
+            });
+
+            return { cells: results, purple, yellow };
+        }
+
+        function normalizeGenotype(g) {
+            // Sort alleles: dominant first
+            const chars = g.split('');
+            chars.sort((a, b) => {
+                if (a.toUpperCase() === b.toUpperCase()) {
+                    return a === a.toUpperCase() ? -1 : 1;
+                }
+                return 0;
+            });
+
+            // For monohybrid
+            if (chars.length === 2) {
+                if (chars[0].toLowerCase() === chars[1].toLowerCase()) {
+                    return chars[0].toUpperCase() === chars[0] ?
+                           chars[0] + chars[1] :
+                           chars[1] + chars[0];
+                }
+            }
+
+            // For dihybrid
+            if (chars.length === 4) {
+                const color = [chars[0], chars[1]].sort((a, b) => {
+                    if (a.toUpperCase() === 'P' && b.toUpperCase() === 'P') {
+                        return a === 'P' ? -1 : 1;
+                    }
+                    return 0;
+                });
+                const texture = [chars[2], chars[3]].sort((a, b) => {
+                    if (a.toUpperCase() === 'S' && b.toUpperCase() === 'S') {
+                        return a === 'S' ? -1 : 1;
+                    }
+                    return 0;
+                });
+                return color.join('') + texture.join('');
+            }
+
+            return g;
+        }
+
+        function checkMonoPractice() {
+            let correct = 0;
+            const feedback = document.getElementById('mono-feedback');
+
+            // Check cells
+            for (let i = 1; i <= 4; i++) {
+                const input = document.getElementById(`mono-c${i}`);
+                const userAnswer = input.value.trim();
+                const expected = currentMonoCross.expected.cells[i - 1];
+
+                if (isGenotypeMatch(userAnswer, expected)) {
+                    input.classList.add('correct');
+                    input.classList.remove('incorrect');
+                    correct++;
+                } else {
+                    input.classList.add('incorrect');
+                    input.classList.remove('correct');
+                }
+            }
+
+            // Check ratios - accept simplified ratios (e.g., 1:1 instead of 2:2)
+            const purpleRatio = parseInt(document.getElementById('mono-purple-ratio').value) || 0;
+            const yellowRatio = parseInt(document.getElementById('mono-yellow-ratio').value) || 0;
+
+            const ratioCorrect = areRatiosEquivalent(
+                purpleRatio, yellowRatio,
+                currentMonoCross.expected.purple, currentMonoCross.expected.yellow
+            );
+
+            if (correct === 4 && ratioCorrect) {
+                feedback.className = 'feedback show correct';
+                feedback.innerHTML = '<strong>Excellent!</strong> All answers are correct!';
+                monoScore++;
+            } else {
+                feedback.className = 'feedback show incorrect';
+                let msg = '<strong>Not quite.</strong> ';
+                if (correct < 4) {
+                    msg += `${correct}/4 cells correct. `;
+                }
+                if (!ratioCorrect) {
+                    const simplified = simplifyRatio(currentMonoCross.expected.purple, currentMonoCross.expected.yellow);
+                    msg += `Expected ratio: ${simplified.a} Purple : ${simplified.b} Yellow`;
+                }
+                feedback.innerHTML = msg;
+            }
+
+            monoTotal++;
+            document.getElementById('mono-score').textContent = monoScore;
+            document.getElementById('mono-total').textContent = monoTotal;
+
+            if (monoTotal >= 3 && monoScore >= 2) {
+                markSectionComplete('mono-practice');
+            }
+        }
+
+        function isGenotypeMatch(user, expected) {
+            if (!user) return false;
+            user = user.trim();
+
+            // Normalize both for comparison
+            const normalUser = normalizeGenotypeForComparison(user);
+            const normalExpected = normalizeGenotypeForComparison(expected);
+
+            return normalUser === normalExpected;
+        }
+
+        // Helper function to find greatest common divisor
+        function gcd(a, b) {
+            a = Math.abs(a);
+            b = Math.abs(b);
+            while (b > 0) {
+                const temp = b;
+                b = a % b;
+                a = temp;
+            }
+            return a;
+        }
+
+        // Simplify a ratio to its lowest terms
+        function simplifyRatio(a, b) {
+            if (a === 0 && b === 0) return { a: 0, b: 0 };
+            if (a === 0) return { a: 0, b: 1 };
+            if (b === 0) return { a: 1, b: 0 };
+            const divisor = gcd(a, b);
+            return { a: a / divisor, b: b / divisor };
+        }
+
+        // Check if two ratios are equivalent (e.g., 2:2 equals 1:1)
+        function areRatiosEquivalent(a1, b1, a2, b2) {
+            const r1 = simplifyRatio(a1, b1);
+            const r2 = simplifyRatio(a2, b2);
+            return r1.a === r2.a && r1.b === r2.b;
+        }
+
+        function normalizeGenotypeForComparison(g) {
+            if (!g) return '';
+            g = g.trim();
+
+            if (g.length === 2) {
+                // Monohybrid
+                const chars = g.split('');
+                if (chars[0].toUpperCase() === chars[1].toUpperCase()) {
+                    // Same letter, sort by case
+                    return chars.sort((a, b) => a === a.toUpperCase() ? -1 : 1).join('');
+                }
+            }
+
+            if (g.length === 4) {
+                // Dihybrid - separate by trait
+                const color = g.substring(0, 2).split('').sort((a, b) => {
+                    return a === a.toUpperCase() ? -1 : 1;
+                }).join('');
+                const texture = g.substring(2, 4).split('').sort((a, b) => {
+                    return a === a.toUpperCase() ? -1 : 1;
+                }).join('');
+                return color + texture;
+            }
+
+            return g;
+        }
+
+        // ==================== DIHYBRID PRACTICE ====================
+        const diGenotypes = {
+            color: ['PP', 'Pp', 'pp'],
+            texture: ['SS', 'Ss', 'ss']
+        };
+
+        function generateDiProblem() {
+            const c1 = diGenotypes.color[Math.floor(Math.random() * 3)];
+            const t1 = diGenotypes.texture[Math.floor(Math.random() * 3)];
+            const c2 = diGenotypes.color[Math.floor(Math.random() * 3)];
+            const t2 = diGenotypes.texture[Math.floor(Math.random() * 3)];
+
+            currentDiCross = {
+                parent1: c1 + t1,
+                parent2: c2 + t2,
+                gametes1: getDiGametes(c1, t1),
+                gametes2: getDiGametes(c2, t2)
+            };
+
+            currentDiCross.expected = calculateDiResults(currentDiCross.gametes1, currentDiCross.gametes2);
+
+            document.getElementById('di-cross-display').textContent = `${currentDiCross.parent1} × ${currentDiCross.parent2}`;
+
+            // Set headers
+            for (let i = 1; i <= 4; i++) {
+                document.getElementById(`di-h${i}`).textContent = currentDiCross.gametes1[i - 1] || currentDiCross.gametes1[0];
+                document.getElementById(`di-v${i}`).textContent = currentDiCross.gametes2[i - 1] || currentDiCross.gametes2[0];
+            }
+
+            // Clear inputs
+            for (let i = 1; i <= 16; i++) {
+                const input = document.getElementById(`di-c${i}`);
+                input.value = '';
+                input.className = '';
+            }
+
+            document.getElementById('di-ps-ratio').value = '';
+            document.getElementById('di-pw-ratio').value = '';
+            document.getElementById('di-ys-ratio').value = '';
+            document.getElementById('di-yw-ratio').value = '';
+            document.getElementById('di-feedback').classList.remove('show');
+        }
+
+        function getDiGametes(color, texture) {
+            const colorAlleles = color === 'PP' ? ['P', 'P'] : color === 'pp' ? ['p', 'p'] : ['P', 'p'];
+            const textureAlleles = texture === 'SS' ? ['S', 'S'] : texture === 'ss' ? ['s', 's'] : ['S', 's'];
+
+            // Generate all 4 gamete combinations (including duplicates for homozygous)
+            // This properly represents the 4 possible gamete outcomes
+            const gametes = [];
+            for (let c of colorAlleles) {
+                for (let t of textureAlleles) {
+                    gametes.push(c + t);
+                }
+            }
+
+            return gametes;
+        }
+
+        function calculateDiResults(g1, g2) {
+            const cells = [];
+            let ps = 0, pw = 0, ys = 0, yw = 0;
+
+            for (let j = 0; j < 4; j++) {
+                for (let i = 0; i < 4; i++) {
+                    // Combine gametes
+                    const gamete1 = g1[i];
+                    const gamete2 = g2[j];
+
+                    // Get color alleles
+                    const c1 = gamete1[0];
+                    const c2 = gamete2[0];
+                    const colorGeno = [c1, c2].sort((a, b) => a === 'P' ? -1 : 1).join('');
+
+                    // Get texture alleles
+                    const t1 = gamete1[1];
+                    const t2 = gamete2[1];
+                    const textureGeno = [t1, t2].sort((a, b) => a === 'S' ? -1 : 1).join('');
+
+                    const genotype = colorGeno + textureGeno;
+                    cells.push(genotype);
+
+                    // Count phenotypes
+                    const isPurple = colorGeno.includes('P');
+                    const isSmooth = textureGeno.includes('S');
+
+                    if (isPurple && isSmooth) ps++;
+                    else if (isPurple && !isSmooth) pw++;
+                    else if (!isPurple && isSmooth) ys++;
+                    else yw++;
+                }
+            }
+
+            return { cells, ps, pw, ys, yw };
+        }
+
+        function checkDiPractice() {
+            let correct = 0;
+            const feedback = document.getElementById('di-feedback');
+
+            for (let i = 1; i <= 16; i++) {
+                const input = document.getElementById(`di-c${i}`);
+                const userAnswer = input.value.trim();
+                const expected = currentDiCross.expected.cells[i - 1];
+
+                if (isDiGenotypeMatch(userAnswer, expected)) {
+                    input.classList.add('correct');
+                    input.classList.remove('incorrect');
+                    correct++;
+                } else {
+                    input.classList.add('incorrect');
+                    input.classList.remove('correct');
+                }
+            }
+
+            const psRatio = parseInt(document.getElementById('di-ps-ratio').value) || 0;
+            const pwRatio = parseInt(document.getElementById('di-pw-ratio').value) || 0;
+            const ysRatio = parseInt(document.getElementById('di-ys-ratio').value) || 0;
+            const ywRatio = parseInt(document.getElementById('di-yw-ratio').value) || 0;
+
+            const ratioCorrect = psRatio === currentDiCross.expected.ps &&
+                                pwRatio === currentDiCross.expected.pw &&
+                                ysRatio === currentDiCross.expected.ys &&
+                                ywRatio === currentDiCross.expected.yw;
+
+            if (correct === 16 && ratioCorrect) {
+                feedback.className = 'feedback show correct';
+                feedback.innerHTML = '<strong>Excellent!</strong> All answers are correct!';
+                diScore++;
+            } else {
+                feedback.className = 'feedback show incorrect';
+                let msg = '<strong>Not quite.</strong> ';
+                if (correct < 16) {
+                    msg += `${correct}/16 cells correct. `;
+                }
+                if (!ratioCorrect) {
+                    msg += `<br>Expected ratio: ${currentDiCross.expected.ps} PS : ${currentDiCross.expected.pw} PW : ${currentDiCross.expected.ys} YS : ${currentDiCross.expected.yw} YW`;
+                }
+                feedback.innerHTML = msg;
+            }
+
+            diTotal++;
+            document.getElementById('di-score').textContent = diScore;
+            document.getElementById('di-total').textContent = diTotal;
+
+            if (diTotal >= 2 && diScore >= 1) {
+                markSectionComplete('di-practice');
+            }
+        }
+
+        function isDiGenotypeMatch(user, expected) {
+            if (!user || user.length !== 4) return false;
+
+            const userNorm = normalizeGenotypeForComparison(user);
+            const expNorm = normalizeGenotypeForComparison(expected);
+
+            return userNorm === expNorm;
+        }
+
+        // ==================== PROBABILITY PRACTICE ====================
+        const probProblems = [
+            {
+                question: "From Pp × Pp, what is the probability of getting a PP offspring?",
+                answer: "1/4",
+                explanation: "From Pp × Pp: 1 PP : 2 Pp : 1 pp. P(PP) = 1/4"
+            },
+            {
+                question: "From Pp × Pp, what is the probability of getting a purple phenotype?",
+                answer: "3/4",
+                explanation: "Purple = PP or Pp. P(Purple) = P(PP) + P(Pp) = 1/4 + 2/4 = 3/4"
+            },
+            {
+                question: "From Pp × pp, what is the probability of getting a yellow offspring?",
+                answer: "1/2",
+                explanation: "Pp × pp gives 1 Pp : 1 pp. Yellow = pp, so P(yellow) = 1/2"
+            },
+            {
+                question: "From PpSs × PpSs, what is the probability of getting ppss offspring?",
+                answer: "1/16",
+                explanation: "P(pp) = 1/4, P(ss) = 1/4. Using Product Rule: P(ppss) = 1/4 × 1/4 = 1/16"
+            },
+            {
+                question: "From PpSs × PpSs, what is the probability of getting a Purple Smooth phenotype?",
+                answer: "9/16",
+                explanation: "P(Purple) = 3/4, P(Smooth) = 3/4. P(Purple AND Smooth) = 3/4 × 3/4 = 9/16"
+            },
+            {
+                question: "From PpSs × PpSs, what is the probability of getting a Yellow Wrinkled phenotype?",
+                answer: "1/16",
+                explanation: "P(Yellow) = 1/4, P(Wrinkled) = 1/4. P(Yellow AND Wrinkled) = 1/4 × 1/4 = 1/16"
+            },
+            {
+                question: "From Pp × Pp, what is the probability of getting a homozygous offspring (either PP or pp)?",
+                answer: "1/2",
+                explanation: "P(PP) + P(pp) = 1/4 + 1/4 = 1/2"
+            },
+            {
+                question: "From PpSs × ppss, what is the probability of getting a Purple Smooth offspring?",
+                answer: "1/4",
+                explanation: "Pp × pp: P(Purple) = 1/2. Ss × ss: P(Smooth) = 1/2. P(Purple Smooth) = 1/2 × 1/2 = 1/4"
+            },
+            {
+                question: "From PP × Pp, what is the probability of getting a yellow offspring?",
+                answer: "0",
+                explanation: "PP × Pp produces only PP and Pp offspring. All will be Purple. P(yellow) = 0"
+            },
+            {
+                question: "From PpSs × PpSs, what is the probability of getting a Purple Wrinkled phenotype?",
+                answer: "3/16",
+                explanation: "P(Purple) = 3/4, P(Wrinkled) = 1/4. P(Purple AND Wrinkled) = 3/4 × 1/4 = 3/16"
+            }
+        ];
+
+        function generateProbProblem() {
+            currentProbProblem = probProblems[Math.floor(Math.random() * probProblems.length)];
+            document.getElementById('prob-question').textContent = currentProbProblem.question;
+            document.getElementById('prob-answer').value = '';
+            document.getElementById('prob-feedback').classList.remove('show');
+        }
+
+        function checkProbPractice() {
+            const userAnswer = document.getElementById('prob-answer').value.trim();
+            const feedback = document.getElementById('prob-feedback');
+
+            if (isProbabilityMatch(userAnswer, currentProbProblem.answer)) {
+                feedback.className = 'feedback show correct';
+                feedback.innerHTML = `<strong>Correct!</strong> ${currentProbProblem.explanation}`;
+                probScore++;
+            } else {
+                feedback.className = 'feedback show incorrect';
+                feedback.innerHTML = `<strong>Not quite.</strong> The answer is ${currentProbProblem.answer}. ${currentProbProblem.explanation}`;
+            }
+
+            probTotal++;
+            document.getElementById('prob-score').textContent = probScore;
+            document.getElementById('prob-total').textContent = probTotal;
+
+            if (probTotal >= 3 && probScore >= 2) {
+                markSectionComplete('probability');
+            }
+        }
+
+        function isProbabilityMatch(user, expected) {
+            // Convert to decimal and compare
+            const userVal = parseFraction(user);
+            const expVal = parseFraction(expected);
+
+            return Math.abs(userVal - expVal) < 0.001;
+        }
+
+        function parseFraction(str) {
+            if (!str) return NaN;
+            str = str.trim();
+
+            // Handle decimal
+            if (!str.includes('/')) {
+                return parseFloat(str);
+            }
+
+            // Handle fraction
+            const parts = str.split('/');
+            if (parts.length !== 2) return NaN;
+
+            return parseFloat(parts[0]) / parseFloat(parts[1]);
+        }
+
+        // ==================== FINAL QUIZ ====================
+        const quizQuestions = [
+            {
+                type: 'multiple',
+                question: "In corn, purple kernel color (P) is dominant over yellow (p). If two heterozygous plants (Pp × Pp) are crossed, what fraction of offspring will have yellow kernels?",
+                options: ["1/4", "1/2", "3/4", "1/16"],
+                correct: 0
+            },
+            {
+                type: 'multiple',
+                question: "What is the genotypic ratio for a monohybrid cross between two heterozygotes (Pp × Pp)?",
+                options: ["1:2:1", "3:1", "9:3:3:1", "1:1"],
+                correct: 0
+            },
+            {
+                type: 'multiple',
+                question: "In a dihybrid cross (PpSs × PpSs), how many different phenotypes are possible in the offspring?",
+                options: ["2", "3", "4", "9"],
+                correct: 2
+            },
+            {
+                type: 'multiple',
+                question: "Using the product rule, what is the probability of getting a PpSs offspring from PpSs × PpSs?",
+                options: ["1/16", "1/8", "1/4", "9/16"],
+                correct: 2
+            },
+            {
+                type: 'multiple',
+                question: "What is the phenotypic ratio for a dihybrid cross between two double heterozygotes?",
+                options: ["3:1", "1:2:1", "9:3:3:1", "1:1:1:1"],
+                correct: 2
+            },
+            {
+                type: 'multiple',
+                question: "If Pp × pp produces offspring, what is the probability of a purple phenotype?",
+                options: ["1/4", "1/2", "3/4", "1"],
+                correct: 1
+            },
+            {
+                type: 'multiple',
+                question: "What does the Law of Independent Assortment state?",
+                options: [
+                    "Alleles separate during meiosis",
+                    "Genes for different traits are inherited independently",
+                    "Dominant alleles always appear in offspring",
+                    "All gametes are identical"
+                ],
+                correct: 1
+            },
+            {
+                type: 'multiple',
+                question: "From PpSs × PpSs, what fraction of offspring will be Yellow Smooth (ppS_)?",
+                options: ["1/16", "3/16", "9/16", "1/4"],
+                correct: 1
+            },
+            {
+                type: 'multiple',
+                question: "How many unique gamete types can a PpSs individual produce?",
+                options: ["2", "4", "8", "16"],
+                correct: 1
+            },
+            {
+                type: 'multiple',
+                question: "Using the sum rule, what is P(Purple) from Pp × Pp? (Purple = PP OR Pp)",
+                options: ["1/4", "1/2", "3/4", "2/4"],
+                correct: 2
+            }
+        ];
+
+        function startQuiz() {
+            currentQuizQuestion = 0;
+            quizScore = 0;
+            document.getElementById('quiz-results').style.display = 'none';
+            document.getElementById('quiz-container').style.display = 'block';
+            document.getElementById('quiz-score').textContent = '0';
+            showQuizQuestion();
+        }
+
+        function showQuizQuestion() {
+            if (currentQuizQuestion >= quizQuestions.length) {
+                finishQuiz();
+                return;
+            }
+
+            const q = quizQuestions[currentQuizQuestion];
+            const container = document.getElementById('quiz-container');
+
+            let html = `
+                <div class="quiz-question">
+                    <h4>Question ${currentQuizQuestion + 1} of ${quizQuestions.length}</h4>
+                    <p style="margin: 15px 0; font-size: 1.1rem;">${q.question}</p>
+                    <div class="quiz-options">
+            `;
+
+            q.options.forEach((opt, index) => {
+                html += `<div class="quiz-option" onclick="selectQuizOption(${index})" data-index="${index}">${opt}</div>`;
+            });
+
+            html += `
+                    </div>
+                    <div id="quiz-feedback" class="feedback"></div>
+                    <button class="btn btn-primary" id="quiz-next-btn" onclick="nextQuizQuestion()" style="display: none; margin-top: 15px;">Next Question →</button>
+                </div>
+            `;
+
+            container.innerHTML = html;
+            updateQuizProgress();
+        }
+
+        function selectQuizOption(index) {
+            const options = document.querySelectorAll('.quiz-option');
+            const q = quizQuestions[currentQuizQuestion];
+            const feedback = document.getElementById('quiz-feedback');
+
+            // Disable further selection
+            options.forEach(opt => {
+                opt.onclick = null;
+                opt.style.cursor = 'default';
+            });
+
+            // Show correct/incorrect
+            options[index].classList.add(index === q.correct ? 'correct' : 'incorrect');
+            options[q.correct].classList.add('correct');
+
+            if (index === q.correct) {
+                quizScore++;
+                document.getElementById('quiz-score').textContent = quizScore;
+                feedback.className = 'feedback show correct';
+                feedback.textContent = 'Correct!';
+            } else {
+                feedback.className = 'feedback show incorrect';
+                feedback.textContent = `Incorrect. The correct answer is: ${q.options[q.correct]}`;
+            }
+
+            document.getElementById('quiz-next-btn').style.display = 'inline-block';
+        }
+
+        function nextQuizQuestion() {
+            currentQuizQuestion++;
+            showQuizQuestion();
+        }
+
+        function updateQuizProgress() {
+            const progress = (currentQuizQuestion / quizQuestions.length) * 100;
+            const bar = document.getElementById('quiz-progress');
+            bar.style.width = progress + '%';
+            bar.textContent = Math.round(progress) + '%';
+        }
+
+        function finishQuiz() {
+            document.getElementById('quiz-container').style.display = 'none';
+            document.getElementById('quiz-results').style.display = 'block';
+
+            const percentage = Math.round((quizScore / quizQuestions.length) * 100);
+            document.getElementById('final-score').innerHTML = `
+                <span style="color: ${percentage >= 70 ? '#4caf50' : '#f44336'};">
+                    ${quizScore} / ${quizQuestions.length} (${percentage}%)
+                </span>
+            `;
+
+            let message = '';
+            if (percentage >= 90) {
+                message = '<p style="color: #4caf50;"><strong>Excellent!</strong> You have mastered Mendelian genetics!</p>';
+            } else if (percentage >= 70) {
+                message = '<p style="color: #4caf50;"><strong>Good job!</strong> You have a solid understanding of the material.</p>';
+            } else if (percentage >= 50) {
+                message = '<p style="color: #ff9800;"><strong>Keep practicing!</strong> Review the tutorials to strengthen your understanding.</p>';
+            } else {
+                message = '<p style="color: #f44336;"><strong>More practice needed.</strong> Please review the tutorials and try again.</p>';
+            }
+
+            document.getElementById('quiz-summary').innerHTML = message;
+            document.getElementById('quiz-progress').style.width = '100%';
+            document.getElementById('quiz-progress').textContent = '100%';
+
+            if (percentage >= 70) {
+                markSectionComplete('quiz');
+            }
+        }
+
+        function restartQuiz() {
+            startQuiz();
+        }
+
+        // ==================== INITIALIZATION ====================
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize on page load
+            console.log('Mendelian Genetics Lesson loaded');
+        });
+    </script>
+</body>
+</html>
